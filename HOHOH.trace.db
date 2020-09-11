@@ -1,0 +1,4 @@
+2020-09-11 11:25:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "VEGETABLE" non trouvée
+Table "VEGETABLE" not found; SQL statement:
+select vegetable0_.id as id1_0_, vegetable0_.color as color2_0_, vegetable0_.name as name3_0_, vegetable0_.price as price4_0_ from vegetable vegetable0_ [42102-200]
