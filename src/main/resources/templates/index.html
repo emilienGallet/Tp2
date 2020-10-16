@@ -2,12 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>IConvoit</title>
+<title>TP3</title>
+<script src="https://unpkg.com/vue@next"></script>
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic"> -->
 </head>
 <body>
-	<h1>TP2</h1>
+	<h1>TP3</h1>
 	<p th:text="${hi}"></p>
 	[[${vege}]]
 	<ul>
@@ -20,5 +21,9 @@
 		<input th:field="*{price}" type="text">
 		<input type="submit">
 	</form>
+	<h1>VUEJS</h1>
+	<div id="container"></div>
+	<!-- script type="text/javascript">alert(Vue.version)</script>-->
+	<script type="text/javascript" src="/js/appli.js"></script>
 </body>
 </html>
