@@ -2,16 +2,34 @@ let app = Vue.createApp({
 	template: '<vege-app titre="Légumes" taux="2"></vege-app>'
 })
 app.component('vegetable', {
-	props: ["veg"],
+	props: ["veg", "indexVege"],
+	emits: ["supprIndex"],
 	template:
 		'<li :title="veg.color" :style="{ background: veg.color}" >' +
-		'{{veg.name}} cost <span :title="enCAD(veg.price)">{{veg.price}}</span> €</li>',
+		'{{indexVege}} {{veg.name}} cost <span :title="enCAD(veg.price)">{{veg.price}}</span> €</li>' +
+		'<vegetable-del @suppr="() => deleteVegetable()"></vegetable-del>',
 	methods: {
 		enCAD: function(enEuros) {
 			return enEuros * this.taux;
 		},
+		deleteVegetable: async function() {
+			console.log("deleteVegetable" + this.indexVege)
+			this.$emit("supprIndex", this.indexVege);
+		},
 	},
 
+})
+
+app.component('vegetable-del', {
+	template: `<form>
+		<input type="submit" value="Supprimer" @click.prevent="supprVege"/>
+		</form>`,
+	emits: ["suppr"],
+	methods: {
+		supprVege: function() {
+			this.$emit("suppr");
+		},
+	},
 })
 
 app.component('vegetable-new', {
@@ -35,7 +53,7 @@ app.component('vege-app', {
 	template: '<h1 :title="leTITRE">{{titre}}</h1>' +
 		'<p>Il y a {{veges.length}} élements</p>' +
 		'<ul>' +
-		'<vegetable v-for="vege in veges" :veg="vege"></vegetable>'
+		'<vegetable v-for="(vege,index) in veges" :veg="vege" :indexVege="index" @supprIndex="(index) => deleteVegetableIndex(index)"></vegetable>'
 		+ '</ul>'
 		+ '<button @click="ajoutTest()">Ajouter un légume</button>' +
 		'<vegetable-new @ajout="(n,c,p) => addVegetable(n, c, p)" />',
@@ -66,15 +84,25 @@ app.component('vege-app', {
 		addVegetable: async function(name, color, price) {
 			let newVege = { name, color, price }
 			let res = await fetch('/api/vegetables', {
-				method: 'POST', 
-				headers: { 'Content-Type': 'application/json' }, 
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(newVege)
 			})
 			let body = await res.json()
 			this.veges.push(body)
 		},
-		deleteVegetable : async function(v){
-			this.veges.splice(this.veges.indexOf(v), 1)
+		deleteVegetableIndex: async function(v) {
+			console.log("deleteVegetableIndex " + v)
+			console.clear()
+			console.log(this.veges[v]._links.self.href)
+			let href = this.veges[v]._links.self.href;
+			this.veges.splice(v, 1)
+			let res = await fetch(href, {
+				method: 'DELETE',
+				headers: { 'Content-Type': 'application/json' },
+			})
+			let body = await res.json()
+			this.veges.push(body)
 		},
 	},
 	computed: {
