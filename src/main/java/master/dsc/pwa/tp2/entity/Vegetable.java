@@ -12,10 +12,10 @@ import lombok.Data;
 public class Vegetable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	Long id;
-	String name;
-	String color;
-	Double price;
+	private Long id;
+	private String name;
+	private String color;
+	private Double price;
 	
 	public Vegetable() {
 		// TODO Auto-generated constructor stub
